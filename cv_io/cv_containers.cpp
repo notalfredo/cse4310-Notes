@@ -50,18 +50,28 @@ int main(int argc, char **argv)
     // get the image size
     std::cout << "image width: " << imageIn.cols << std::endl;
     std::cout << "image height: " << imageIn.rows << std::endl;
+    // imageIn.depth() can be used to find the depth, because gray 8bit and gray 16bit are different
     std::cout << "image channels: " << imageIn.channels() << std::endl;
     
     // get the image size using the size() member function
     std::cout << "image width: " << imageIn.size().width << std::endl;
     std::cout << "image height: " << imageIn.size().height << std::endl;
 
+    // FIRST OP ON CV MAT below
     // display the input image
     cv::imshow("imageIn", imageIn);
     cv::waitKey();
     
     // convert the image to grayscale
     cv::Mat imageGray;
+
+    // cvtColor(source, destination, conversion)
+    // COLOR_BGR2GRAY ... many others
+    //   OpenCV stores RGB as BGR.
+    // 
+    // Why is converting to gray scale is important?
+    //      because most all OpenCV operations are usually in greyscale.
+    //      80% of the time, we are more concerned with the geometry of the image.
     cv::cvtColor(imageIn, imageGray, cv::COLOR_BGR2GRAY);
     
     // display the grayscale image
@@ -69,7 +79,9 @@ int main(int argc, char **argv)
     cv::waitKey();
     
     // split the input image into individual channels
+    // initialize an array of size 3, this is an array of cv::Mat's
     cv::Mat channels[3];
+    // splits the original image's channels and puts it into each of the above cv::Mats
     cv::split(imageIn, channels);
     
     // display the image channels
@@ -80,18 +92,31 @@ int main(int argc, char **argv)
     
     // resize the input image to half of its original size
     cv::Mat imageResized;
+    // cv::Size is an arbitrarty type that represents the sizes of containers Size(width, height)
+    // Size has an option for bi-cublic sampling when sizing up an image.
     cv::resize(imageIn, imageResized, cv::Size(imageIn.cols / 2, imageIn.rows / 2));
     cv::imshow("imageResized", imageResized);
     
     // save the output image
+    // Good for debugging. other optional flags, apply compression, quality levels
     cv::imwrite("OUTPUT.png", imageResized);
     cv::waitKey();
     
+
+    // manual pixel iteration, usually avoid this because its slow.
+    //
     // iterate over the resized image printing the pixel values (cv::Mat is row-major, so access is row,col)
     for(int i = 0; i < imageResized.rows; i++)
     {
         for(int j = 0; j < imageResized.cols; j++)
         {
+            // imageResized.at<cv::Vec3b>
+            //  remember that the value at the pixel has 3 values
+            //  .at<TEMPALTE> is used to get the row column of the pixel
+            //  Vec3b : depth, a vector of 3 bytes
+            //      IF IT WAS A
+            //      Single Channel: Vec1b
+            //
             int b = imageResized.at<cv::Vec3b>(i, j)[0];
             int g = imageResized.at<cv::Vec3b>(i, j)[1];
             int r = imageResized.at<cv::Vec3b>(i, j)[2];

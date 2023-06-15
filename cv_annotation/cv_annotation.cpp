@@ -56,17 +56,32 @@ int main(int argc, char **argv)
     cv::imshow("imageIn", imageIn);
     cv::waitKey();
 
+
+    // NEW STUFF
+    // REGION OF INTEREST (ROI)
+    //
+    // Ex: We want to draw blocks around people to avoid them. Or to count how many of something are in the scene. 
+    // 
+    // ROI: rectangular region of interest
+    //
+    // Most straightforward way is to define a ROI is using two points, x1, y1, and x2, y2
+    // Other way: centroid, using center point, 0.5W, 0,5H
+
     // create a 200 pixel wide region of interest (ROI) on the center of the image
     cv::Point p1(imageIn.cols / 2 - 100, imageIn.rows / 2 - 100);
     cv::Point p2(imageIn.cols / 2 + 100, imageIn.rows / 2 + 100);
+    // a Rect in OpenCV is just a container that stores 2 points, check their datamembers. Convenience class.
     cv::Rect region(p1, p2);
 
     // extract the ROI into its own image and display
+    //
+    // CROP
     cv::Mat imageROI = imageIn(region);
     cv::imshow("imageROI", imageROI);
     cv::waitKey();
 
     // draw a red rectangle around the ROI and update the display
+    // rectangle(source img, ROI, Scalar( a tuple of scalars, color code BGR ), int line_thickness, ...other opts)
     cv::rectangle(imageIn, region, cv::Scalar(0, 0, 255), 3);
     cv::imshow("imageIn", imageIn);
     cv::waitKey();
@@ -82,6 +97,9 @@ int main(int argc, char **argv)
     cv::Point cornerTopRight(imageIn.cols - 1, 0);
     cv::Point cornerBottomLeft(0, imageIn.rows - 1);
     cv::Point cornerBottomRight(imageIn.cols - 1, imageIn.rows - 1);
+
+    // draw the lines
+    // line( target img, first point, second point, color, thickness )
     cv::line(imageIn, cornerTopLeft, cornerBottomRight, cv::Scalar(0, 0, 0), 3);
     cv::line(imageIn, cornerTopRight, cornerBottomLeft, cv::Scalar(0, 0, 0), 3);
     cv::imshow("imageIn", imageIn);

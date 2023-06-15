@@ -58,7 +58,16 @@ int main(int argc, char **argv)
 		}
 		else
 		{
+            // where stuff happens, above is always the same.
+            //
+            // imshow(p1, p2)
+            // p1: give the address of the target window name, call with same window name to overwrite image, or different name to open a new window
+            // p2: give the image to take
 			cv::imshow(DISPLAY_WINDOW_NAME, imageIn);
+            // waitKey(optional p1)
+            // can be used as a busy wait. returns the key entered within the time (ms).
+            // Without a parameter, waits forever until keypress.
+            // Used with imshow, allows the image to be displayed.
 			cv::waitKey();
 		}
     }

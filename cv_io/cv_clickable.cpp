@@ -40,6 +40,14 @@ static void clickCallback(int event, int x, int y, int flags, void* param);
  **********************************************************************************************************************/
 static void clickCallback(int event, int x, int y, int flags, void* param)
 {
+
+
+    // theres multiple event types that are passed from the setMousecallback fn. 
+    //
+    // void* param, the ref to &imageIn, allows passing a set of data that allows the data to be retrieved. So we can see the actual values of the (x,y)
+    //  a way of accessing data out of scope async
+    //
+
     // cast userdata to a cv::Mat
     cv::Mat imageIn = *(cv::Mat *)param;
     
@@ -89,6 +97,8 @@ int main(int argc, char **argv)
     
     // display the input image
     cv::imshow("imageIn", imageIn);
+    // setMouseCallback(window, ref to callback fn, pass address of cv::Mat)
+    //  async function
     cv::setMouseCallback("imageIn", clickCallback, &imageIn);
     cv::waitKey();
 }
