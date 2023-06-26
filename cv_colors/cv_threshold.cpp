@@ -64,9 +64,9 @@ int main(int argc, char **argv)
 
     // threshold the image
     cv::Mat imageThreshold;
-    double thresh = 100; //keep everything between 100 and 255
+    double thresh = 100;
     double maxval = 255;
-    int thresholdType = 0;//sets the mode
+    int thresholdType = 0;
     cv::threshold(imageGray, imageThreshold, thresh, maxval, thresholdType);
 
     // display the images
