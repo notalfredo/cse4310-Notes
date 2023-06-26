@@ -1,7 +1,7 @@
 # CSE 4310: Introduction to Computer Vision Notes - Alfredo
 The following repo is my collection of annotated notes from CSE 4310. I wrote none of this code I only added comments discussed in class :). [See original code](https://github.com/cmcmurrough/cse4310). 
 
-# CSE 4310: Introduction to Computer Vision 
+# CSE 4310: Introduction to Computer Vision
 
 ![Learn to make this](https://github.com/cmcmurrough/cse4310/blob/master/t800.jpg?raw=true)
 
