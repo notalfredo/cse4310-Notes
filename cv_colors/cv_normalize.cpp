@@ -21,13 +21,28 @@
  * @author Christopher D. McMurrough
  **********************************************************************************************************************/
 
-// include necessary dependencies
+//We are mose focues on the shape of the picture rather than the
+//colors of the image. The problem with color is with lights on 
+//and lights off we get different values there. 
+//Camera sensors do not give you perfect white or black colors
+//Hard to get repetable results from different camers with same photo
+//Normalization clean up to images
+
+//Color image -> gray scale copy -> geometry stuff here
+//Color iamge -> color stuff here
+
+//We want to normalize before converting gray scale 
+//Normalization takes min and max values in histogram and 
+//stretches it out
+
+
+//include necessary dependencies
 #include <iostream>
 #include <string>
 #include "opencv2/opencv.hpp"
 
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/highgui/highgui.hpp" 
+#include "opencv2/imgproc/imgproc.hpp"// Normalization, histogram, blurring, sharpaning -> low level image processing...
 #include <iostream>
 #include <stdio.h>
 
@@ -64,17 +79,17 @@ int main(int argc, char **argv)
     }
 
     // convert the image to grayscale
-    cv::Mat imageGray;
+    cv::Mat imageGray; 
     cv::cvtColor(imageIn, imageGray, cv::COLOR_BGR2GRAY);
 
-    // locate the minimum and maximum values
+    // locate the minimum and maximum values in cv::Mat
     double min, max;
-    cv::minMaxLoc(imageGray, &min, &max);
+    cv::minMaxLoc(imageGray, &min, &max);//REQUIRES double for Min, Max
     std::cout << "Minimum value: " << min << std::endl;
     std::cout << "Maximum value: " << max << std::endl;
 
     // normalize the image
-    cv::Mat imageNormalized;
+    cv::Mat imageNormalized;                       //8bit unsigned 1 channel
     cv::normalize(imageGray, imageNormalized, 0, 255, cv::NORM_MINMAX, CV_8UC1);
 
     // locate the minimum and maximum values

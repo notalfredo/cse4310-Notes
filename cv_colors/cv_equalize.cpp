@@ -20,6 +20,11 @@
  * @brief C++ example of image equalization in OpenCV
  * @author Christopher D. McMurrough
  **********************************************************************************************************************/
+//Calculate the frequencies of all the values and try to spread
+//them out of range. Increasing the values not represented before
+//Really good when the image is super saturated.
+
+
 
 // include necessary dependencies
 #include <iostream>
@@ -68,6 +73,7 @@ int main(int argc, char **argv)
     cv::cvtColor(imageIn, imageGray, cv::COLOR_BGR2GRAY);
 
     // apply the histogram equalization
+    // will bin all values to try to equalize them
     cv::Mat imageEqualized;
     cv::equalizeHist(imageGray, imageEqualized);
 
