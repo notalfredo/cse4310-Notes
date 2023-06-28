@@ -14,7 +14,6 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-
 /*******************************************************************************************************************//**
  * @file cv_ellipse.cpp
  * @brief C++ example of Canny edge detection and ellipse model fitting in OpenCV
@@ -75,8 +74,10 @@ int main(int argc, char **argv)
     cv::Canny(imageGray, imageEdges, cannyThreshold1, cannyThreshold2, cannyAperture);
     
     // erode and dilate the edges to remove noise
-    int morphologySize = 1;
-    cv::Mat edgesDilated;
+    // anything that is non zero if blob will be eroded by 1 pixel
+    // dilate will add pixel, also a fill function that will call dialte and erode
+    int morphologySize = 1;                  
+    cv::Mat edgesDilated;       // cv::Mat() prevent operations on part of object
     cv::dilate(imageEdges, edgesDilated, cv::Mat(), cv::Point(-1, -1), morphologySize);
     cv::Mat edgesEroded;
     cv::erode(edgesDilated, edgesEroded, cv::Mat(), cv::Point(-1, -1), morphologySize);
@@ -84,15 +85,17 @@ int main(int argc, char **argv)
     // locate the image contours (after applying a threshold or canny)
     std::vector<std::vector<cv::Point> > contours;
     //std::vector<int> hierarchy;
+    //
+    //                             Can give you internal/external/herichal contras
     cv::findContours(edgesEroded, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
 
     // draw the contours
-    cv::Mat imageContours = cv::Mat::zeros(imageEdges.size(), CV_8UC3);
+    cv::Mat imageContours = cv::Mat::zeros(imageEdges.size(), CV_8UC3); //black image
     cv::RNG rand(12345);
     for(int i = 0; i < contours.size(); i++)
     {
         cv::Scalar color = cv::Scalar(rand.uniform(0, 256), rand.uniform(0,256), rand.uniform(0,256));
-        cv::drawContours(imageContours, contours, i, color);
+        cv::drawContours(imageContours, contours, i, color); //min tracking area
     }
 
     // compute minimum area bounding rectangles
@@ -100,7 +103,7 @@ int main(int argc, char **argv)
     for(int i = 0; i < contours.size(); i++)
     {
         // compute a minimum area bounding rectangle for the contour
-        minAreaRectangles[i] = cv::minAreaRect(contours[i]);
+        minAreaRectangles[i] = cv::minAreaRect(contours[i]); 
     }
 
     // draw the rectangles
@@ -129,7 +132,7 @@ int main(int argc, char **argv)
 
     // draw the ellipses
     cv::Mat imageEllipse = cv::Mat::zeros(imageEdges.size(), CV_8UC3);
-    const int minEllipseInliers = 50;
+    const int minEllipseInliers = 50; //used to eliminate small circles
     for(int i = 0; i < contours.size(); i++)
     {
         // draw any ellipse with sufficient inliers
@@ -152,3 +155,5 @@ int main(int argc, char **argv)
         
     cv::waitKey();
 }
+// Width height theta for ellipse parametric equation ?
+// Ransac helps with fitting parametric equations

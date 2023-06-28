@@ -36,6 +36,10 @@
  * @return return code (0 for normal termination)
  * @author Christoper D. McMurrough
  **********************************************************************************************************************/
+//Edge is where a light region meeds a dark region. 
+//Canny edge detector
+//Hufflines -> the lines that we will feed canny edge detector
+
 int main(int argc, char **argv)
 {
     cv::Mat imageIn;
@@ -48,6 +52,7 @@ int main(int argc, char **argv)
     }
     else
     {
+        //we can open directly to grayscale if we want to 
         imageIn = cv::imread(argv[1], cv::IMREAD_COLOR);
 
         // check for file error
@@ -68,10 +73,12 @@ int main(int argc, char **argv)
     cv::cvtColor(imageIn, imageGray, cv::COLOR_BGR2GRAY);
 
     // find the image edges
+    // Kernal algorithm moves region interest around
 	cv::Mat imageEdges;
 	const double cannyThreshold1 = 100;
 	const double cannyThreshold2 = 200;
-	const int cannyAperture = 3;
+	const int cannyAperture = 3; // our kernal -> has to be odd
+    //we have to pass in a gray scale image
 	cv::Canny(imageGray, imageEdges, cannyThreshold1, cannyThreshold2, cannyAperture);
 
     // find the image lines
@@ -79,12 +86,15 @@ int main(int argc, char **argv)
     const double rho = 1;               // resolution of rho parameter in pixels
     const double theta = CV_PI / 180;   // resolution of theta parameter in radians
     const double houghThreshold = 50;   // minimum number of intersections to detect a line
-    const double minLineLength = 200;    // minimum number of points on a line
+    const double minLineLength = 200;   // minimum number of points on a line
     const double maxLineGap = 40;       // maximum gap between points on a line
+                                        
+    //returns line segmants with termination, HoughLines does not return termination
     cv::HoughLinesP(imageEdges, lines, rho, theta, houghThreshold, minLineLength, maxLineGap);
     for( size_t i = 0; i < lines.size(); i++ )
     {
         cv::Vec4i l = lines[i];
+                                  //p1x   p1y               p2x  p2y
         cv::line(imageIn, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, cv::LINE_AA);
     }
 
